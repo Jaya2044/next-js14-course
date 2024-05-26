@@ -1,0 +1,2226 @@
+Next JS:
+========
+
+Next JS is a react framework for buidling web applications.
+
+React is a Javascript library for building user interfaces. By using react not 
+feasible to create full-featured application ready for production.
+
+Next Js uses react for building user interfaces. It provides additional features 
+that enables us to build production ready applications.
+
+features:
+
+    1. File based routing
+    2. Optimized rendering
+    3. Data fetching
+    4. Bundling compiling etc...
+    5. API Routes
+    6. Styling
+    7. Dev and prod build system
+
+We dont need to install additional packages as Next js provides everything 
+we need.
+
+Next JS simplifies the process of building a web application
+for production.
+
+
+Create application:
+====================
+
+npx create-next-app@latest
+
+type project name - hello-world
+
+npx create-next-app@latest hello-world
+
+package.json - It contains dependencies, devDependencies and scripts.
+
+tsconfig.json - Typescript configuration File
+
+next.config.js - configuration file for next js
+
+postcss.config.js & tailwind.config.ts - For tailwind css
+
+package-lock.json - which is for consistent installation of our dependencies.
+
+.gitignore - For version control
+
+README.md - Which contains a few instructions related to running, building 
+            and deploying application.
+
+next-env.d.ts - Typescript declaration for next js.
+
+.next - this folder will be generated when we run either the dev or build       
+        scripts.
+
+node_modules - all the dependencies of our project are installed. this folder
+               will be created when we run the npm install command.
+
+public - It contains all the static assets like images, svg
+
+globals.css - global styles for an application.
+
+layout.tsx - Shared across different pages in the application.
+
+when we run command - npm run dev - the execution will transferred to 
+layout.tsx file and root layout component will rendered. when we navigate 
+to localhost:3000 children prop will always refer to the component defined 
+in page.tsx
+
+page.tsx is the Home component.
+
+
+React Server Components:
+=========================
+
+RSC is a new architecture introduced by the react team in version 18 
+which was quicky embraced by next js.
+
+In next js all the components are server components by default.
+
+Server components have the ability to run tasks like reading files or 
+fetching data from database.
+
+However Server components don't have the ability to use hooks or 
+handle user interactions.
+
+
+Client Components:
+===================
+
+In next js, to create a client component it is necessary to add 
+"use client" at the top of the component file.
+
+client components can't run tasks like reading files from database 
+but they have the ability to use hooks and manage user interactions.
+
+--------------------------------------------------------------------------------
+
+Routing:
+=========
+
+Next.js has a file-based routing mechanism.
+
+Url paths that users can access in browser are defined by files and 
+folders in code.
+
+All routes must be placed inside the app folder.
+
+Every file that corresponds to a route must be named page.tsx or page.jsx
+
+Every folder corresponds to a path segment in the browser URL.
+
+Scenario 1:
+============
+
+localhost: 3000
+
+src 
+    app
+        page.tsx    -> http://localhost:3000
+
+
+page.tsx:
+----------
+export default function Home() {
+    return(
+        <h2>Welcome Home!</h2>
+    )
+}
+
+
+Scenario 2:
+============
+
+http://localhost:3000/about 
+http://localhost:3000/profile 
+
+src 
+    app 
+        profile
+            page.tsx    -> http://localhost:3000/profile 
+        about 
+            page.tsx    -> http://localhost:3000/about 
+
+    page.tsx            -> http://localhost:3000
+
+
+
+profile/page.tsx:
+-----------------
+export default function Profile() {
+    return(
+        <h2>My Profile</h2>
+    )
+}
+
+
+about/page.tsx:
+-----------------
+export default function Profile() {
+    return(
+        <h2>My Profile</h2>
+    )
+}
+
+* There is no need to install and configure a router with code.
+
+
+
+Nested Routes:
+===============
+
+http://localhost:3000/blog
+
+http://localhost:3000/blog/first
+
+http://localhost:3000/blog/second
+
+src 
+    app 
+        blog 
+            page.tsx        -> http://localhost:3000/blog
+            
+            first 
+                page.tsx    -> http://localhost:3000/blog/first
+
+            second 
+                page.tsx    -> http://localhost:3000/blog/second
+
+
+blog/page.tsx:
+--------------
+
+export default function Blog() {
+    return(
+        <h2>Blogs</h2>
+    )
+}
+
+blog/first/page.tsx:
+---------------------
+
+export default function FirstBlog() {
+    return(
+        <h2>This is my first blog</h2>
+    )
+}
+
+blog/second/page.tsx:
+----------------------
+
+export default function SecondBlog() {
+    return(
+        <h2>This is my second blog</h2>
+    )
+}
+
+
+Dynamic Routes:
+=================
+
+localhost:3000/products
+
+localhost:3000/products/1 
+
+src - app 
+        products
+            page.tsx        -> localhost:3000/products
+            [productId] 
+                page.tsx    -> localhost:3000/products/1
+
+products/page.tsx:
+-------------------
+export default function ProductList() {
+    return(
+        <div>
+            <h2>Product List:</h2>
+            <h3>Product 1</h3>
+            <h3>Product 2</h3>
+            <h3>Product 3</h3>
+        </div>
+    )
+}
+
+products/[productId]/page.tsx:
+-------------------------------
+
+type productProps = {
+    params: {
+        productId: string
+    }
+}
+
+export default function ProductDetails({params}: productProps) {
+    return(
+        <div>
+            <h2>Details about product {params.productId}</h2>
+        </div>
+    )
+}
+
+
+Nested Dynamic Routes:
+========================
+
+localhost:3000/products/1
+
+localhost:3000/products/1/reviews/1
+
+src - app 
+        products 
+            page.tsx 
+
+            [productId]
+                page.tsx
+                reviews 
+                    [reviewId]
+                        page.tsx
+
+[reviewId]/page.tsx:
+---------------------
+
+type detailsProps = {
+  params: {
+    reviewId: string;
+    productId: string;
+  };
+};
+
+export default function ReviewDetails({ params }: detailsProps) {
+  return (
+    <h2>
+      Review {params.reviewId} for product {params.productId}
+    </h2>
+  );
+}
+
+
+catch all segments:
+=====================
+
+suppose we have 5 features and each feature contains 5 concepts.
+
+localhost:3000/docs/feature1/concept1
+localhost:3000/docs/feature1/concept2
+
+localhost:3000/docs/feature2/concept1
+localhost:3000/docs/feature2/concept2 etc....
+
+we will have 25 routes for our application and 25 files also 
+need to create for routing.
+
+* If we have 20 features and 20 concepts then we need to create 
+400 files for implementing the routing for them.
+
+    20 features * 20 concepts = 400
+
+    20 features * 1 [conceptId] = 20
+
+    1 [featureId] * 1 [conceptId] = 1 file for 400 routes 
+
+
+http://localhost:3000/docs/routing/catch-all-segments
+
+http://localhost:3000/docs/routing
+
+http://localhost:3000/docs
+
+docs 
+    [...slug]
+        page.tsx
+
+
+[...slug]/page.tsx:
+---------------------
+
+type docsProps = {
+  params: {
+    slug: string[];
+  };
+};
+
+export default function Docs({ params }: docsProps) {
+  if (params.slug.length === 2) {
+    return (
+      <h2>
+        Viewing docs for feature {params.slug[0]} and concept {params.slug[1]}
+      </h2>
+    );
+  } else if (params.slug.length === 1) {
+    return <h2>Viewing docs for feature {params.slug[0]}</h2>;
+  } else {
+    return (
+      <div>
+        <h2>Document Page</h2>
+      </div>
+    );
+  }
+}
+
+
+http://localhost:3000/docs - will get 404 page - need to change like below
+
+docs/[[..slug]] - It will catch all optional segments.
+
+
+Not Found Page:
+================
+
+http://localhost:3000/dashboard
+
+src 
+    app 
+        not-found.tsx
+
+
+not-found.tsx:
+----------------
+
+export default function NotFound() {
+    return(
+        <div>
+            <h2>Page not found</h2>
+            <h2>Could not find requested resource</h2>
+        </div>
+    )
+}
+
+
+-> src/app/products/[productId]/reviews/[reviewId]/page.tsx
+
+page.tsx:
+----------
+
+if(parseInt(params.reviewId) > 1000) {
+    notFound()
+}
+
+-> src/app/products/[productId]/reviews/[reviewId]/not-found.tsx
+
+not-found.tsx:
+--------------
+export default function ReviewNotFound() {
+    return(
+        <h1>Review not found</h1>
+    )
+}
+
+
+http://localhost:3000/products/1/reviews/999 - it is working fine
+
+http://localhost:3000/products/1/reviews/1001 - 404 page will display
+
+
+File Colocation:
+=================
+
+src - app - dashboard
+                line-chart.tsx
+                page.tsx
+
+line-chart.tsx:
+----------------
+export default function LineChart() {
+    return(
+        <h2>Line Chart</h2>
+    )
+}
+
+
+http://localhost:3000/dashboard - not found page will open
+
+
+page.tsx:
+---------
+export default function BarChart() {
+    return(
+        <h2>Bar Chart</h2>
+    )
+}
+
+http://localhost:3000/dashboard - not it will load the data from page.tsx 
+
+
+
+Private Folders:
+==================
+
+Private folder indicates that it is Private implementation detail 
+and should not be considered by the routing system.
+
+The folder and all it's sub folders are excluded from routing.
+
+Prefix the folder with an underscore.
+
+src 
+ app 
+    _lib 
+        page.tsx 
+
+page.tsx:
+----------
+export default function PrivateRoute() {
+    return(
+        <div>
+            We can not view this in the browser 
+        </div>
+    )
+}
+
+* For seperating UI logic and routing logic.
+
+* For consistently organizing internal files across a project.
+
+if we change to %5F from _lib we can able see in the browser
+
+src 
+    app 
+        %5F 
+            page.tsx
+
+
+Route Groups:
+==============
+
+Route Groups allows us to group routes without effecting the URL 
+path structure.
+
+Let's implement the authentication routes:
+
+    1. register 
+    2. login 
+    3. forgot-password
+
+src 
+    app 
+        register 
+            page.tsx 
+        login 
+            page.tsx 
+        forgot-password 
+            page.tsx
+
+register/page.tsx:
+-------------------
+export default function Register() {
+    return(
+        <h2>User Registration</h2>
+    )
+}
+
+
+login/page.tsx:
+---------------
+export default function Login() {
+    return(
+        <h2>User Login</h2>
+    )
+}
+
+
+forgot-password/page.tsx:
+---------------------------
+export default function ForgotPassword() {
+    return(
+        <h2>Forgot Password</h2>
+    )
+}
+
+now we moved all the folder inside of auth folder 
+
+src 
+ app 
+   auth 
+     register 
+        page.tsx 
+     login 
+        page.tsx
+     forgot-password 
+        page.tsx
+
+the urls should be below:
+
+http://localhost:3000/auth/login
+http://localhost:3000/auth/register
+http://localhost:3000/auth/forgot-password
+
+* To create a group name we can exclude that from route and we will 
+wrap the folder name with paranthesis. 
+
+src 
+  app 
+    (auth)
+        register 
+            page.tsx    -> http://localhost:3000/register
+        login 
+            page.tsx    -> http://localhost:3000/login
+        forgot-password 
+            page.tsx    -> http://localhost:3000/forgot-password
+
+
+
+Layouts:
+=========
+
+A page is UI that is unique to a route.
+
+A layout is UI that is shared between multiple pages in the app.
+
+we can define a layout by default exporting a react component 
+from layout.js or layout.tsx file
+
+Layout component should accept a children prop that will be 
+populated with a child component during rendering.
+
+RootLayout is a mandatory layout for every next.js application.
+
+next.js automatically generates the file even if we delete.
+
+
+layout.tsx:
+------------
+export const metadata = {
+  title: "Next.js",
+  description: "Generated by Next.js",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <header style={{ backgroundColor: "lightblue", padding: "1rem" }}>
+          <p>Header</p>
+        </header>
+        {children}
+        <footer style={{ backgroundColor: "ghostwhite", padding: "1rem" }}>
+          <p>Footer</p>
+        </footer>
+      </body>
+    </html>
+  );
+}
+
+
+Nested Layouts:
+================
+
+Layouts can be nested.
+
+We can create the layout specifically for particular pages.
+
+suppose we can create layout.tsx file with in product details page.
+
+src 
+  app 
+   products 
+      [productId]
+           layout.tsx
+           page.tsx
+    page.tsx
+
+
+layout.tsx:
+------------
+type childrenProps = {
+    children: React.ReactNode
+}
+
+export default function ProductDetailsLayout({children}: childrenProps) {
+    return(
+        <div>
+            {children}
+            <h2>Featured Products</h2>
+        </div>
+    )
+}
+
+
+16. Route Group Layout:
+========================
+
+src 
+  app 
+   (auth)
+      (with-auth-layout)
+            login 
+                page.tsx
+            register
+                page.tsx
+            layout.tsx
+       forgot-password 
+            page.tsx
+
+layout.tsx:
+------------
+type childrenProps = {
+  children: React.ReactNode;
+};
+
+export default function AuthLayout({ children }: childrenProps) {
+  return (
+    <div>
+      <h2>Inner Layout</h2>
+      {children}
+    </div>
+  );
+}
+
+
+17. Routing Metadata:
+======================
+
+Ensuring SEO is crucial for increasing visibility and attracting users.
+
+Next.js introduced metadata API which allows us to define the metadata 
+for each page. 
+
+We can define metadata In layout.tsx file or page.tsx file
+
+There are 2 methods to configure metadata:
+
+    1. export a static metadata object 
+
+    2. export a dynamic generateMetadata function.
+
+
+Metadata rules:
+----------------
+1. Both layout.tsx or page.tsx files can export metadata.
+
+2. If metadata defined in a layout it applies to all pages in that 
+layout.
+
+3. If metadata defined in a page, it applies only to that page.
+
+4. page metadata will replace layout metadata if they have the same 
+properties.
+
+
+Static Metadata:
+-----------------
+
+src 
+  app 
+   about 
+     page.tsx 
+
+page.tsx:
+---------
+export const metadata = {
+    title: "About Page"
+}
+
+export default function About() {
+    return(
+        <h2>About me</h2>
+    )
+}
+
+* Dynamic metadata depends on dynamic information.
+
+products 
+    [productId]
+        page.tsx
+
+page.tsx:
+----------
+import { Metadata } from "next"
+
+type productProps = {
+    params: {
+        productId: string
+    }
+}
+
+export const generateMetadata = ({params}: productProps): Metadata => {
+    return {
+        title: `Product ${params.productId}`
+    }
+}
+
+export default function ProductDetails({params}: productProps) {
+    return(
+        <div>
+            <h2>Details about product {params.productId}</h2>
+        </div>
+    )
+}
+
+we can use async and await also for dynamic metadata.
+
+export const generateMetadata = async ({
+  params,
+}: productProps): Promise<Metadata> => {
+  const title = await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(`Iphone ${params.productId}`);
+    }, 100);
+  });
+  return {
+    title: `Product ${title}`,
+  };
+};
+
+
+18. Title Metadata:
+====================
+
+Primary purpose is to define the document title.
+
+It can be either a string or object.
+
+The title object supports 3 keys:
+
+    1. absolute 
+    2. default
+    3. template
+
+export const metadata = {
+  title: {
+    absolute: "",
+    default: "",
+    template:""
+  },
+  description: "Generated by Next.js",
+};
+
+title.default property useful when we want to provide a fallback 
+title for child route segments.
+
+title.template property useful when we want to create dynamic titles
+by adding a prefix or suffix.
+
+layout.tsx:
+------------
+export const metadata = {
+  title: {
+    absolute: "",
+    default: "Next.JS Tutorial - Codevolution",
+    template:"%s | Codevolution"
+  },
+  description: "Generated by Next.js",
+};
+
+
+blog/page.tsx:
+----------------
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Blog"
+}
+
+Blog replaces the %s.
+
+* we don't need absolute property in layout.tsx file.
+
+layout.tsx:
+------------
+export const metadata = {
+  title: {
+    default: "Next.JS Tutorial - Codevolution",
+    template:"%s | Codevolution"
+  },
+  description: "Generated by Next.js",
+};
+
+
+blog/page.tsx:
+----------------
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: {
+        absolute: "Blog"
+    }
+}
+
+
+19. Link Component Navigation:
+===============================
+
+Next.js provides us with Link component to enable the client side 
+navigation.
+
+We navigate between routes by using Link component.
+
+we need to import it from "next/link"
+
+page.tsx:
+----------
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <div>
+      <h2>Welcome Home!</h2>
+      <Link href="/blog">Blog</Link>&nbsp;&nbsp;
+      <Link href="/products">Products</Link>
+    </div>
+  );
+}
+
+
+products / page.tsx:
+----------------------
+import Link from "next/link"
+
+export default function ProductList() {
+    const productId = 100;
+    return(
+        <div>
+            <Link href="/">Home</Link>
+            <h2>Product List:</h2>
+            <h3><Link href="products/1">Product 1</Link></h3>
+            <h3><Link href="products/2">Product 2</Link></h3>
+            <h3><Link href="products/3" replace>Product 3</Link></h3>
+            <h3><Link href={`products/${productId}`}>Product {productId}</Link></h3>
+        </div>
+    )
+}
+
+replace: will replace the current history state instead of adding a new URL 
+         into the browser’s history stack.
+
+
+20 - Active Links:
+====================
+
+src 
+  app 
+    (productInfo)
+      product1
+        page.tsx
+      product2
+        page.tsx
+      product3
+        page.tsx
+      layout.tsx
+      styles.css
+
+product1/page.tsx:
+-------------------
+export default function Product1() {
+    return(
+        <div>
+            <h1>Product 1 information</h1>
+        </div>
+    )
+}
+
+product2/page.tsx:
+-------------------
+export default function Product2() {
+    return(
+        <div>
+            <h1>Product 2 information</h1>
+        </div>
+    )
+}
+
+product3/page.tsx:
+-------------------
+export default function Product3() {
+    return(
+        <div>
+            <h1>Product 3 information</h1>
+        </div>
+    )
+}
+
+
+layout.tsx:
+------------
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import "./styles.css";
+
+type childProps = {
+  children: React.ReactNode;
+};
+
+const navLinks = [
+  { name: "Product 1", href: "/product1" },
+  { name: "Product 2", href: "/product2" },
+  { name: "Product 3", href: "/product3" },
+];
+
+export default function ProductInfoLayout({ children }: childProps) {
+  const pathName = usePathname();
+  return (
+    <div>
+      {navLinks.map((link) => {
+        const isActive = pathName.startsWith(link.href);
+        return (
+          <Link
+            href={link.href}
+            key={link.name}
+            className={isActive ? "font-bold mr-4" : "text-blue-500 mr-4"}
+          >
+            {link.name}
+          </Link>
+        );
+      })}
+      {children}
+    </div>
+  );
+}
+
+
+styles.css:
+------------
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+21 - Navigating Programmatically:
+===================================
+
+We navigate to different routes using Link component.
+
+we will have the situations where we need to programmatically
+navigate to a specific route.
+
+src 
+  app 
+    order-product 
+      page.tsx
+    
+page.tsx:
+----------
+"use client"
+
+import { useRouter } from "next/navigation"
+
+export default function OrderProduct() {
+    const router = useRouter();
+
+    const handleClick = () => {
+        console.log("Placing order");
+        router.push("/")
+    }
+    return(
+        <div>
+            <h1>Order Product</h1>
+            <button onClick={handleClick}>Place Order</button>
+        </div>
+    )
+}
+
+
+22 - Templates:
+================
+
+Templates are similar to Layouts, in that they wrap each child 
+layout or page.
+
+With Templates:
+  When a user navigates between routes that share a template,
+  a new instance of the component is mounted,
+  DOM elements are re-created,
+  State is not preserved
+  Effects are re-synchronized.
+
+With Layouts:
+  State is preserved.
+
+A template can be defined by exporting a default react component from 
+a template.js or template.tsx file
+
+similar to layouts, templates also accept a children prop which will 
+render the nested segments in the route.
+
+
+23 - Loading UI:
+=================
+
+We have special files in next.js:
+
+  page.tsx
+  layout.tsx
+  template.tsx 
+  not-found.tsx
+  loading.tsx
+
+loading.tsx file allows us to create loading states that are displayed 
+to the users while a specific route segment content is loading.
+
+The loading state appears immediately as soon as a user navigates to 
+a route.
+
+src 
+  app 
+    blog 
+      first 
+      second 
+      loading.tsx 
+
+loading.tsx:
+-------------
+export default function Loading() {
+    return(
+        <h1>Loading.....</h1>
+    )
+}
+
+
+24 - Error Handling:
+=====================
+
+we have a special file called error.tsx 
+
+automatically wrap a route segment and it's nested children in a 
+react error boundary.
+
+npm run build - To run the application.
+
+npm run start - To start the built application.
+
+
+products
+  [productId]
+      reviews
+        [reviewId]
+           error.tsx
+
+error.tsx:
+-----------
+"use client";
+
+export default function ErrorBoundary({ error }: { error: Error }) {
+  return <h2 style={{ color: "tomato" }}>{error.message}</h2>;
+}
+
+
+component hierarchy:
+
+  layout.tsx 
+  template.tsx 
+  error.tsx
+  loading.tsx
+  not-found.tsx
+  page.tsx
+
+
+25 - Recovering from Errors:
+=============================
+
+error.tsx:
+----------
+"use client";
+
+export default function ErrorBoundary({
+  error,
+  reset,
+}: {
+  error: Error;
+  reset: () => void;
+}) {
+  return (
+    <div>
+      <h2 style={{ color: "tomato" }}>{error.message}</h2>
+      <button onClick={reset}>Try again</button>
+    </div>
+  );
+}
+
+
+
+26 - Handling Errors in Nested Routes:
+========================================
+
+Errors bubble up to the closest parent error boundary.
+
+an error.tsx file will create errors for all it's nested child segments.
+
+products
+  error.tsx 
+
+error.tsx content will replace the whole products UI if we get any error.
+
+products
+  [productId]
+      reviews  
+        [reviewId]
+            page.tsx
+            error.tsx -> here it will replace content in page.tsx file.
+            
+
+
+27 - Handling Errors in Layouts:
+=================================
+
+an error.tsx file will handle errors for all it's nested child 
+segments.
+
+the error boundary does not catch errors thrown because it's 
+nested inside the layouts component.
+
+
+
+28 - Parallel Routes:
+======================
+
+Parallel routes are an advanced routing mechanism that allows for the 
+simultaneous render one or more pages with in the same layout.
+
+* consider the challenge of building a complex dashboard for a web 
+application. In the dashboard we need to display various views like 
+
+  1. user analytics 
+  2. revenue metrics 
+  3. notifications
+
+Parallel routes are defined in next.js using a feature known as slots.
+
+Slots help structure our content in a modular fashion.
+
+To define a slot, we use the '@folder' naming convention.
+
+Each slot is then passed as prop to it's corresponding layout.tsx file.
+
+src  
+  app 
+    dashboard
+      @notifications
+          page.tsx
+      @revenue 
+          page.tsx
+      @users 
+          page.tsx 
+    layout.tsx 
+    page.tsx
+  components 
+    card 
+      card.tsx
+
+@notifications / page.tsx:
+---------------------------
+
+import Card from "@/src/components/card/card";
+
+export default function Notifications() {
+    return(
+        <Card>Notifications</Card>
+    )
+}
+
+
+@revenue / page.tsx:
+---------------------
+import Card from "@/src/components/card/card";
+
+export default function Revenue() {
+    return(
+        <Card>Revenue Metrics</Card>
+    )
+}
+
+
+@users / page.tsx:
+--------------------
+import Card from "@/src/components/card/card";
+
+export default function Users() {
+    return(
+        <Card>Users Analytics</Card>
+    )
+}
+
+
+layout.tsx:
+------------
+type childProps = {
+  children: React.ReactNode;
+  users: React.ReactNode;
+  revenue: React.ReactNode;
+  notifications: React.ReactNode;
+};
+
+export default function ComplexDashboardLayout({
+  children,
+  users,
+  revenue,
+  notifications,
+}: childProps) {
+  return(
+    <>
+        <div>{children}</div>
+        <div style={{display: 'flex'}}>
+            <div style={{ display: 'flex', flexDirection: 'column'}}>
+                <div>{users}</div>
+                <div>{revenue}</div>
+            </div>
+            <div style={{ display: 'flex', flex: 1}}>{notifications}</div>
+        </div>
+    </>
+  )
+}
+
+
+page.tsx:
+----------
+export default function ComplexDashboardPage() {
+    return(
+        <h1>Complex dashboard</h1>
+    )
+}
+
+components/card/card.tsx:
+--------------------------
+const Card = ({ children }: { children: React.ReactNode }) => {
+  const cardStyle = {
+    padding: "100px",
+    margin: "10px",
+    boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
+    border: "1px solid #ddd",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: 'tomato',
+    color:'White',
+    fontWeight: 'bold'
+  };
+  return <div style={cardStyle}>{children}</div>;
+};
+
+export default Card;
+
+slots are not route segments and do not affect the URL structure.
+
+1. Parallel routes useful for highly dynamic sections of an app, such as 
+dashboards and feeds on social sites.
+
+2. Independent Route Handling 
+
+      Each slot of our layout such as users, revenue can have it's own 
+      loading and error states.
+
+
+
+29 - Unmatched Routes:
+=======================
+
+without default.tsx file next js can't determine the default content 
+for these slots on the initial load.
+
+default.tsx file serves as a fallback to render content when the 
+framework can not retrieve a slot's active state from the current URL.
+
+http://localhost:3000/complex-dashboard/archived - we will get a 404 page.
+
+complex-dashboard 
+    @users
+      default.tsx
+    @revenue
+      default.tsx
+    default.tsx
+
+@users / default.tsx:
+-----------------------
+import Card from "@/src/components/card/card";
+
+export default function DefaultUsersAnalytics() {
+    return(
+        <Card>Users Analytics</Card>
+    )
+}
+
+@revenue / default.tsx:
+------------------------
+
+import Card from "@/src/components/card/card";
+
+export default function DefaultRevenueMetrics() {
+    return(
+        <Card>Revenue Metrics</Card>
+    )
+}
+
+default.tsx:
+-------------
+export default function DefaultComplexDashboardPage() {
+    return(
+        <h1>Complex dashboard</h1>
+    )
+}
+
+
+http://localhost:3000/complex-dashboard/archived - now we won't a 404 page.
+
+
+
+30 - Conditional Routes:
+=========================
+
+complex-dashboard 
+    @login 
+        page.tsx
+
+page.tsx:
+----------
+import Card from "@/src/components/card/card";
+
+export default function Login() {
+    return(
+        <Card>Please login to continue</Card>
+    )
+}
+
+
+layout.tsx:
+------------
+type childProps = {
+  children: React.ReactNode;
+  users: React.ReactNode;
+  revenue: React.ReactNode;
+  notifications: React.ReactNode;
+  login: React.ReactNode;
+};
+
+export default function ComplexDashboardLayout({
+  children,
+  users,
+  revenue,
+  notifications,
+  login,
+}: childProps) {
+  const isLoggedIn = false;
+  return isLoggedIn ? (
+    <>
+      <div>{children}</div>
+      <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div>{users}</div>
+          <div>{revenue}</div>
+        </div>
+        <div style={{ display: "flex", flex: 1 }}>{notifications}</div>
+      </div>
+    </>
+  ) : (
+    login
+  );
+}
+
+
+31 - Intercepting Routes:
+===========================
+
+(.) to match segments on the same level.
+
+(..) to match segments one level above.
+
+(..)(..) to match segments two levels above.
+
+(...) to match segments from the root app directory.
+
+
+
+32 - Parallel Intercepting Routes:
+====================================
+
+
+
+
+
+
+
+33. Route Handlers:
+=====================
+
+App Router having the capability to create the custom request handlers for 
+our routes using a feature called route handlers.
+
+Route handlers allows us to create Restful endpoints. 
+
+There is no overhead of having to create and configure a seperate server.
+
+Route handlers also must be placed inside the app folder.
+
+src 
+  app 
+    hello
+      route.ts   -> localhost:3000/hello
+  
+route.ts:
+----------
+export async function GET() {
+    return new Response('Hello World')
+}
+
+
+src 
+  app 
+    dashboard-api 
+      route.ts      -> localhost:3000/dashboard-api
+      users-api 
+        route.ts    -> localhost:3000/dashboard-api/users-api 
+
+
+src 
+  app 
+    profile 
+      page.tsx 
+      route.ts
+
+localhost:3000/profile    -> route.ts will load 
+
+we need to organize the folders clearly.
+
+profile 
+  page.tsx 
+  api 
+    route.ts
+  
+localhost:3000/profile 
+localhost:3000/profile/api
+
+
+34 - Handling GET Request:
+===========================
+
+src 
+  app 
+    comments 
+      data.ts 
+      route.ts 
+
+data.ts:
+---------
+export const comments = [
+    {
+        id: 1,
+        text: 'This is the first comment'
+    },
+    {
+        id: 2,
+        text: 'This is the second comment'
+    },
+    {
+        id: 3,
+        text: 'This is the third comment'
+    }
+]
+
+route.ts:
+----------
+import { comments } from "./data";
+
+export async function GET() {
+    return Response.json(comments)
+}
+
+
+-> Go to postman or thunder client, hit the below url:
+    
+      http://localhost:3000/comments
+
+
+35 - Handling POST Request:
+============================
+
+route.ts:
+---------
+export async function POST(request: Request) {
+    const comment = await request.json()
+    const newComment = {
+        id: comments.length + 1,
+        text: comment.text
+    }
+    comments.push(newComment);
+    return new Response(JSON.stringify(newComment), {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        status: 201
+    })
+}
+
+Go to thunder client:
+  method: POST 
+  url: http://localhost:3000/comments
+  body: 
+    {
+      "Text": "New comment"
+    }
+
+Hit send button, the new comment will be added to list of comments.
+
+
+36 - Dynamic Route Handlers:
+=============================
+
+params - It containing the dynamic route parameters for 
+the current route.
+
+src 
+ app 
+  comments 
+    [id]
+      route.ts   -> http://localhost:3000/comments/1
+    route.ts 
+
+[id]/routes.ts:
+----------------
+import { comments } from "../data";
+
+export async function GET(
+  request: Request,
+  {params}: {params: {id: string}}) {
+    const comment = comments.find(comment => comment.id === parseInt(params.id));
+    return Response.json(comment)
+}
+
+
+37 - Handling PATCH Request:
+==============================
+
+[id]
+  route.ts 
+
+route.ts:
+---------
+export async function PATCH(
+  request: Request,
+  {params}: {params: {id: string}}
+) {
+  const body = await request.json();
+  const {text} = body;
+  const index = comments.findIndex(
+    comment => comment.id === parseInt(params.id)
+  )
+  comments[index].text = text;
+  return Response.json(comments[index])
+}
+
+
+38 - Handling DELETE Request:
+==============================
+
+[id]
+  route.ts
+
+export async function DELETE(
+  request: Request,
+  {params}: {params: {id: string}}
+) {
+  const index = comments.findIndex(
+    comment => comment.id === parseInt(params.id)
+  )
+  const deletedComment = comments[index];
+  comments.splice(index, 1);
+  return Response.json(deletedComment)
+}
+
+
+
+39. URL Query Parameters:
+===========================
+
+To handle query parameters effectively we need request 
+parameter.
+
+NextRequest provides convinent methods for managing query 
+parameters.
+
+src 
+  app 
+    comments 
+      route.ts
+
+route.ts:
+---------
+import { NextRequest } from "next/server";
+
+export async function GET(request: NextRequest) {
+    const searchParams = request.nextUrl.searchParams;
+    const query = searchParams.get("query");
+    const filteredComments = query ? 
+    comments.filter(comment => comment.text.includes(query))
+    : comments
+
+    return Response.json(filteredComments)
+}
+
+
+
+40 - Redirects in Route Handlers:
+===================================
+
+src 
+  app 
+    comments 
+      route.ts
+
+export async function GET(
+  request: Request,
+  {params}: {params: {id: string}}) {
+    if(parseInt(params.id) > comments.length) {
+      redirect('/comments')
+    }
+    const comment = comments.find(comment => comment.id === parseInt(params.id));
+    return Response.json(comment)
+}
+
+
+41 - Headers in Route Handlers:
+================================
+
+Http headers represent the metadata associated with an 
+API request and response.
+
+1. Request Headers:
+---------------------
+These are sent by the client, such as web browser to the server. 
+contains essential information about the request, which helps 
+server to understand and process it correctly. 
+
+'user-agent' - Which identifies the browser and operating system 
+to the server.
+
+'Accept' - Which indicates content types like text, video or image 
+formats that the client can process. It enables the server to deliver 
+the resource in a format suitable for the client. 
+
+'Authorization' - this header used by client to authenticate itself 
+to the server.
+
+
+2. Response Headers:
+---------------------
+
+These are sent back from the server to the client. They provide 
+information about the server and the data being sent in the response.
+
+'Content-Type' - This header indicates media type of the response. 
+It tells the client what type of data it is returns such has 
+
+      text/html - for HTML documents 
+      application/json - For JSON documents.
+
+profile 
+  api 
+    route.ts 
+
+route.ts:
+----------
+import { NextRequest } from "next/server";
+import { headers } from "next/headers"
+
+export async function GET(request: NextRequest) {
+    const requestHeaders = new Headers(request.headers);
+    const headerList = headers()
+    console.log(requestHeaders.get('Authorization'));
+    console.log(headerList.get('Authorization'))
+    return new Response('<h1>Profile API data</h1>', {
+        headers: {
+            'Content-Type': 'text/html'
+        }
+    })
+}
+
+
+42 - Cookies in Route Handlers:
+=================================
+
+Cookies are small piece of data that a server sends to web browser.
+
+Cookies are mainly used for three purposes:
+    1. Session management like login, shopping carts..
+    2. Personalization like preferences and user themes.
+    3. Tracking like analyzing user behaviour and recorder.
+
+  
+profile/api/route.ts:
+----------------------
+
+export async function GET(request: NextRequest) {
+    const requestHeaders = new Headers(request.headers);
+    const headerList = headers()
+    
+
+    cookies().set("theme", "dark");
+    cookies().set('recordsPerPage', "20");
+
+    const theme = request.cookies.get('theme')
+    const records = cookies().get('recordsPerPage')
+    
+
+    console.log(requestHeaders.get('Authorization'));
+    console.log(headerList.get('Authorization'))
+
+    console.log(theme)
+    console.log(records)
+
+    return new Response('<h1>Profile API data</h1>', {
+        headers: {
+            'Content-Type': 'text/html'
+        }
+    })
+}
+
+
+
+43 - Caching in Route Handlers:
+=================================
+
+Route handlers are cached by default when using GET method
+with the Response object in Next.js
+
+src 
+  app 
+    time 
+      route.ts 
+
+route.ts:
+----------
+export async function GET() {
+    return Response.json({
+        time: new Date().toLocaleTimeString()
+    })
+}
+
+chrome -> localhost:3000/time - display the time and 
+when we reload the page updated time will show when 
+make a request to route handler, this is the behaviour in 
+development mode.
+
+Let's build application and test it again: 
+
+    npm run build 
+    npm run start or npm start 
+
+chrome -> localhost:3000/time -> when we reload the page 
+the time doesn't update.
+
+route.ts:
+----------
+export const dynamic = 'force-dynamic';
+
+export async function GET() {
+    return Response.json({
+        time: new Date().toLocaleTimeString()
+    })
+}
+
+
+By using dynamic handler will execute for each  user request.
+
+
+
+44 - Middleware:
+=================
+
+Middleware in next.js is a powerful feature that offers to 
+intercept and control the flow of requests and responses 
+within the applications.
+
+Middlewares allows us to specify the paths where it will be 
+active: 
+
+  1. Custom matcher config
+  2. Conditional Statements.
+
+Middlewares can redirect to other paths 
+                rewrites paths
+
+
+middleware.ts:
+---------------
+import { NextResponse, type NextRequest } from "next/server"
+
+export function middleware(request: NextRequest) {
+    return NextResponse.redirect(new URL('/', request.url))
+}
+
+export const config = {
+    matcher: '/profile'
+}
+
+chrome -> localhost:3000/profile -> it's redirected to home page.
+
+
+another way to achieve same: 
+------------------------------
+import { NextResponse, type NextRequest } from "next/server"
+
+export function middleware(request: NextRequest) {
+    if(request.nextUrl.pathname === "/profile") {
+        return NextResponse.redirect(new URL('/hello', request.url))
+    }
+}
+
+
+Rewrites URL:
+---------------
+export function middleware(request: NextRequest) {
+    if(request.nextUrl.pathname === "/profile") {
+        return NextResponse.rewrite(new URL('/hello', request.url))
+    }
+}
+
+It will redirect to hello page but url wont change.
+
+
+cookies and headers middlewares:
+=================================
+
+middleware.ts:
+---------------
+
+export function middleware(request: NextRequest) {
+    const response = NextResponse.next()
+
+    const themePreference = request.cookies.get('theme');
+
+    if(!themePreference) {
+        response.cookies.set('theme', 'dark')
+    }
+    response.headers.set('custom-header', 'custom-value')
+    return response
+}
+
+
+45 - Rendering:
+=================
+
+Rendering is the process that transforms the code we write 
+into user interfaces.
+
+
+46.Client-side Rendering (CSR):
+===============================
+
+React is used to develop the single page applications.
+
+In a single page application, when a client makes a request 
+the server sends a single HTMl page to the browser and it 
+contains just a simple div tag and reference to the bundle.js
+
+In the CSR, the component code is transformed into a user 
+interface directly within the browser.
+
+
+Drawbacks of CSR:
+==================
+
+1. SEO: 
+        Generated HTML contains a single div tag is not optimal 
+        for SEO, as it provides ittle content for search engines 
+        to index. search engines struggle to index the content properly. 
+
+2. Performance: 
+        If the browser handle all the work such as fetching data, 
+        computing the UI, and making the HTML interactive can slow 
+        things down. users might see blank screen or loading spinner 
+        while the page loads.
+
+3. Whenever added new feature to the application, increases the size 
+of the javascript bundle, prolonging wait time for users to see the 
+UI.
+
+4. browser has to download, parse and execute Javascript before user 
+sees any content on the page. 
+
+
+
+47 - Server-side Rendering (SSR):
+===================================
+
+In SRR, the server takes charge of rendering the full HTML. the 
+HTML will generate on the server and browser is able to quickly parse
+and display it, improving the intial page loading time.
+
+The SSR approach effectively resolves the issues associated
+with client side rendering.
+
+1. It significantly improves SEO because search engines can easily 
+index the server-rendered content. 
+
+2. users can immediately see the html content instead of blank screen 
+or loading spinner. 
+
+
+Server Side Solutions:
+=======================
+
+  1. Static Site Generation ( SSG )
+  2. Server Side Rendering ( SSR )
+
+Server side rendering was a significant improvement over 
+client side rendering, providing faster intial page loads
+and better SEO.
+
+We want to show something to the user till the browser fetches the 
+JavaScript code with the actual data. However, client-side rendering 
+cannot do that.
+
+The process between the rendering and comparison of the real DOM 
+with the temporary DOM during the first render is called
+Hydration process.
+
+
+Drawbacks of SSR:
+=================
+
+1. Data fetching must be completed before the server rendering
+HTML.
+
+2. The JavaScript required for the components needs to be fully 
+loaded on the client side before the Hydration process can start.
+
+3. all components have to be hydrated. 
+
+
+
+48 - Suspense for SSR:
+=======================
+
+Use the <Suspense> component to unlock two major SSR features: 
+  1. HTML streaming on the server.
+  2. selective hydration on the client.
+
+* We can use <Suspense> component to achieve HTML streaming on 
+the server.
+
+
+let's take on example:
+  <header>
+  <sidenav>
+  <main>
+  <footer>
+
+
+code splitting:
+================
+  Code splitting allows us to mark specific code segments as 
+  not immediately for loading, signalling our bundler to 
+  segregate them into seperate <script> tags.
+
+  React.lazy for code splitting, enables us to seperate the main 
+  section code from the javascript Primary bundle.
+
+  The javascript containing React and the code for entire application,
+  excluding the main section, it can be downloaded Independently by 
+  the client without having to wait for the main section's code.
+
+
+* By wrapping the main section within <Suspense>, this feature called 
+selective hydration. it allows for the hydration of sections as they 
+become available, before the rest of the HTML and javascript code 
+are fully downloaded.
+
+syntax:
+-------
+import { lazy } from "react";
+
+const MainContent = lazy(()=> import('./MainContent.js));
+
+<Layout>
+  <Header >
+  <Sidenav />
+  <Suspense fallback={<Spinner />}>
+      <MainContent />
+  </Suspense>
+</Layout>
+
+
+* A heavy piece of JS doesn't effect the rest of the page using
+selective hydration.
+
+
+49 - React Server Components (RSC):
+====================================
+
+CSR -> SSR -> Suspense for SSR
+
+Suspense for SSR -> It brought us closer to a seamless rendering 
+                    experience.
+
+Suspense for SSR Challenges:
+==============================
+
+  1. Increased bundle size leading to excessive downloads for users.
+
+  2. Unnecessary hydration delaying interactivity.
+
+  3. Extensive client-side proccessing that could result in poor 
+     Performance.
+
+
+To achieve the above challenges RSC's are introduced.
+
+*************************************************************************
+
+React Server Components (RSC):
+================================
+
+React Server components represent a new architecture designed 
+by the react team.
+
+We have 2 components: 
+  1. client components 
+  2. server components
+
+client components:
+-------------------
+
+  client components are primarily run on client side.
+
+  client components have the access to client environment,
+  such as the browser, allowing us to use state, effects and 
+  event listeners to handle interactivity and also access browser 
+  api's like geolocation, local storage.
+
+
+server components:
+------------------
+
+  server components are new type of components, designed to operate 
+  on the server.
+
+  unlike client components, code stays on the server and is never 
+  downloaded to the client.
+
+
+Benefits:
+---------
+1. reduced bundle size:
+          Server components do not send the code to the client.
+
+2. Direct access to server-side resources:
+          Having direct access to server-side resources like 
+          database or file system. server side components are 
+          enable efficient data fetching and rendering without 
+          needing additional client-side processing.
+
+3. Security:
+        Keeping sensitive data and logic, including tokens and 
+        API keys away from the client side.
+
+4. Improved data fetching:
+        When fetching data on the client-side using useEffect,
+        a child component can't begin loading it's data until 
+        the parent component has finished loading. this sequential 
+        fetching of data leads to poor Performance.
+
+        By moving the logic to server, request latency reduced, and 
+        overall performance is improved.
+
+5. Caching:
+        Rendering on the server enables caching of results, which can 
+        be re-used in subsequent requests and across different users. 
+
+        This approach can significantly improve performance and reduce 
+        costs by minimizing the amount of rendering and data fetching 
+        required for each request.
+
+
+6. Faster intial page load:
+        By generating html on the server, page becomes immediately 
+        visible to users without delay of downloading, parsing and 
+        executing javascript.
+
+7. Improved SEO:
+        Regarding SEO, server rendered HTML is fully accessible to 
+        search engine bots, enhancing the indexability of pages. 
+
+8. Efficient streaming:
+        Server components allows the rendering process to be divided 
+        into chunks, which are then streamed to the client as soon as 
+        they are ready.
+
+        No need to wait for the entire page to finish rendering on the 
+        server.
+
+
+Server components take charge of data fetching and static rendering.
+
+Server components run only on the server, accessing data and preparing
+content without being sent to the browser, which makes app faster for 
+users becuase less information needs to download.
+
+RSC introduce a new way of building react applications by seperating 
+components into two types:
+      1. Server Components
+      2. client components
+
+server components can't manage clicks or interactions directly.
+
+client components will work in the user's browser and handle all 
+interactive parts of the app like clicking, typing etc...
+
+*************************************************************************
+
+Server and Client Components:
+=============================
+
+By default, every component in a next.js app is considered as 
+server component.
+
+example:
+--------
+
+app 
+  about/page.tsx
+
+page.tsx:
+---------
+export default function AboutApp() {
+    console.log('AboutApp server component')
+    return <h2>About App Page</h2>
+}
+
+output:
+-------
+  When we hit localhost:3000/about-app it will load the component 
+  but we wont any console message in browser console. 
+  we can see the message in terminal only.
+
+
+If we want to make it as client component we have to mention
+"use client" at top of the page.
+
+Server components are rendered only on the server.
+
+Client components are rendered once on the server and then on 
+the client side.
+
+*************************************************************************
+
+51 - RSC Rendering Lifecycle:
+==============================
+
+
+
+
+*************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
